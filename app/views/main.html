@@ -1,22 +1,35 @@
 <div class="header">
-  <ul class="nav nav-pills pull-right">
-    <li class="active"><a ng-href="#">Home</a></li>
-    <li><a ng-href="#">About</a></li>
-  </ul>
   <h3 class="text-muted">Protractor Tutorial</h3>
 </div>
 
 <div class="jumbotron" ng-init="hideInput=false">
-    <div class="row">
+    <div class="row" ng-if="!hideInput">
         <div class="col-xs-8 col-xs-offset-2">
             <input class="form-control text-center item-name-input" 
             type="text" 
-            ng-if="!hideInput" 
             ng-model="item.name" 
             placeholder="Please enter item name">
         </div>
     </div>
     <br/>
+    <div class="row" ng-if="hideInput">
+        <div class="col-xs-12">
+            <table class="table table-striped text-left">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Profile Pic</th>
+                    <th>Message</th>
+                </tr>
+                <tr ng-repeat="item in mockItems">
+                    <td>{{item.id}}.</td>
+                    <td>{{item.name}}</td>
+                    <td><img ng-src="{{item.profilePic}}" alt="{item.name}"></td>
+                    <td>{{item.message}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
     <div class="row">
         <button 
             ng-click="hideInput=!hideInput" 

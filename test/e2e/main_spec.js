@@ -17,3 +17,16 @@ describe( 'E2E: main page', function(){
         expect(ptor.isElementPresent(by.input('item.name'))).toBe(false);
     });
 });
+
+describe( 'listing page', function(){
+    beforeEach( function(){
+        browser.get('http://127.0.0.1:9000');
+        element(by.input('item.name')).sendKeys('Testing Input');
+        element(by.partialButtonText('THE THING')).sendKeys('\n');
+    });
+
+    it('should have 4 items', function(){
+        var elems = element.all(by.repeater('item in mockItems'));
+        expect(elems.count()).toBe(4);
+    });
+});
