@@ -1,6 +1,5 @@
+var ptor;
 describe( 'E2E: main page', function(){
-    var ptor;
-
     beforeEach( function(){
         browser.get('http://127.0.0.1:9000');
         ptor = protractor.getInstance();
@@ -28,5 +27,22 @@ describe( 'listing page', function(){
     it('should have 4 items', function(){
         var elems = element.all(by.repeater('item in mockItems'));
         expect(elems.count()).toBe(4);
+    });
+});
+
+describe( 'page navigation', function(){
+    var link;
+    beforeEach(function(){
+        browser.get('http://127.0.0.1:9000');
+        link = element(by.css('.header ul li:nth-child(2)'));
+        link.click();
+    });
+
+    it('should navigate to the /about page when clicking', function(){
+        expect(ptor.getCurrentUrl()).toMatch(/\/about/);
+    });
+
+    it('should add the active class when at /about', function(){
+        expect(link.getAttribute('class')).toMatch(/active/);
     });
 });
