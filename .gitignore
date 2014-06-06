@@ -4,4 +4,4 @@ dist
 .sass-cache
 app/bower_components
 .idea
-atlasian-ide-plugin.xml
+atlassian-ide-plugin.xml
