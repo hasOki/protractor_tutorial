@@ -1,10 +1,15 @@
 Protractor Tutorial
 ===================
 
-Protractor is a E2E testing using Selenium. It will test using black box and design to simulate end user web page access perspective. Functionality of the page element and work flow of the application is the crucial part of the testing.
+Protractor is a E2E testing using Selenium. It will test using black box and 
+design to simulate end user web page access perspective. Functionality of the page 
+element and work flow of the application is the crucial part of the testing.
+
 
 ##Why Protractor
-Protractor is a match made in heaven for AngularJS. Besides having the selenium DOM targeting capability, it also has capability to select element based on the Angular binding attributes ( e.g. ng-model, )
+Protractor is a match made in heaven for AngularJS. Besides having the selenium 
+DOM targeting capability, it also has capability to select element based on the 
+Angular binding attributes ( e.g. ng-model, )
 
 ##Installation
 You can install the protractor as global stand alone app using 
@@ -15,12 +20,15 @@ or locally
 	
 	$ npm install protractor 
 
-Protractor also require a webdriver to run it's testing, you will have 2 server running, one for your web application and the other one for selenium.
-Depending on your protractor installation you can either access your webdriver-manager inside your project `node_modules/` to run this command:
+Protractor also require a webdriver to run it's testing, luckyly Protractor comes 
+with the webdriver-manager to download the necessary browser driver file. 
+Depending on your protractor installation you can either access your 
+webdriver-manager inside your project `node_modules/` to run this command:
 
 	$ ./node_modules/protractor/bin/webdriver-manager update
 	
-The script will download the files that needed to run Selenium. After download you can test if the webdriver properly downloaded and installed by typing:
+The script will download the files that needed to run Selenium. After download you 
+can test if the webdriver properly downloaded and installed by typing:
 
 	$ ./node_modules/protractor/bin/webdriver-manager start
 
@@ -28,23 +36,27 @@ Once you have it running without error you already to do your testing.
 	
 ##Configuration
 Protractor receive one input file as their config file to start testing.
-You can get the sample configuration file from inside protractor example folder, you can copy it as your base configuration.
+You can get the sample configuration file from inside protractor example folder, 
+you can copy it as your base configuration.
 
 	$ cp ./node_modules/protractor/example/chromeOnlyConf.js protractor_conf.js
 	
-For more available configuration options you can access this file `./node_modules/protractor/referenceConf.js`
+Here is the sample config 
+	
+For more available configuration options you can access this file 
+`./node_modules/protractor/referenceConf.js`
 
 ##Running Your First Test
 In your terminal, you will need to run 3 things: 
-- `webdriver-manager`, 
-- your web server that you want to test ( in this tutorial I run it using `grunt serve` ), 
+- `webdriver-manager`
+  Protractor comes with
+- your web server that you want to test 
+( in this tutorial I run it using `grunt serve` )
 - 'protractor'
 
-I am using tmux to manage my terminal instances like this:
+I am using [tmux](http://tmux.sourceforge.net/) to manage my terminal instances like this:
 
 ![terminal window](images/terminal_screenshot.png)
-
-
 
 
 ##Writing Your First Test
@@ -54,8 +66,10 @@ I am using tmux to manage my terminal instances like this:
 
 
 ###Steping Up A Notch
-As you can see from the code above, you can pile a bunch of page testing in one testing config file.
-It will grow nasty pretty quick and become unreadable. Another way to manage the the test case is by separating the selector and test into separate class.
+As you can see from the code above, you can pile a bunch of page testing in one 
+testing config file. 
+It will grow nasty pretty quick and become unreadable. Another way to manage the 
+the test case is by separating the selector and test into separate class.
 
 ```
 function IndexPage() {
@@ -132,7 +146,8 @@ describe("hello-protractor", function () {
 
 ##More Settings
 ###Testing Against Multiple Browser
-If you are feeling confident with your code and want to test it against multiple browser you can set it up using:
+If you are feeling confident with your code and want to test it against multiple 
+browser you can set it up using:
 
 ```
 multiCapabilities: [{
@@ -155,7 +170,8 @@ capabilities: {
 
 
 ###Taking Web Page Snapshots
-If you want to take a _selfie_ of your website you can do it using `browser.takeScreenshot()`.
+If you want to take a _selfie_ of your website you can do it using 
+`browser.takeScreenshot()`.
 
 Here is the sample usage:
 
@@ -182,7 +198,8 @@ browser.takeScreenshot().then(function (png) {
 ```
 
 ##Automate With Grunt
-To make your life easier, you can get `grunt-protractor-runner` and you can add the protractor section in your `Gruntfile.js` 
+To make your life easier, you can get `grunt-protractor-runner` and you can add 
+the protractor section in your `Gruntfile.js` 
 
 ```
 protractor: {
@@ -218,7 +235,8 @@ protractor: {
 }
 ```
 
-You can then run the test individually or better yet you can run it conncurently using `grunt-parallel`.
+You can then run the test individually or better yet you can run it concurrently 
+using `grunt-parallel`.
 Install the concurrent plug-in in your project root directory using:
 
 	$ npm install grunt-concurrent --save-dev
@@ -245,11 +263,13 @@ Add a new task in your `Gruntfile.js`
 grunt.registerTask('protractor-e2e', ['concurrent:protractor_test']);
 ```
 
-Now you can call the protractor test easily using `grunt protractor-e2e` and all of 3 browser will run the test concurrently.
+Now you can call the protractor test easily using `grunt protractor-e2e` and all 
+of 3 browser will run the test concurrently.
 
 ###But, there is more ... 
-You can even add the task inside the watch list, so everytime you change the test case / code, the testing will be triggered automaticaly, but use it with caution.
-Install the watch plugin, if you have not already, using
+You can even add the task inside the watch list, so every time you change the test 
+case / code, the testing will be triggered automatically, but use it with caution.
+Install the watch plug in, if you have not already, using
 	
 	$ npm install grunt-contrib-watch --save-dev
 	
@@ -257,7 +277,7 @@ and add the e2e settings inside the `watch`section:
 
 ```
 e2eTest: {
-	files: ['spec/{,*/}*.js',
+	files: ['e2e/{,*/}*.js',
             '<%= yeoman.app %>/scripts/{,*/}*.js',
             '<%= yeoman.app %>/{,*/}*.html',
                 '.tmp/styles/{,*/}*.css',
@@ -266,11 +286,12 @@ e2eTest: {
       }
 ```
 
+and **BOOM** ... _Awesome-Sauce_ ...
 
   
 ##Additional Reading
 
-- [Introduction to Protractor](https://docs.google.com/a/hasoffers.com/file/d/0BwDWzYJ-4RpAQnNRLXM3QVFPMjg/edit) - Highlevel overview of Functional Test ( E2E Testing ) and how Protractor can help you to do that.
+- [Introduction to Protractor] (https://docs.google.com/a/hasoffers.com/file/d/0BwDWzYJ-4RpAQnNRLXM3QVFPMjg/edit) - Highlevel overview of Functional Test ( E2E Testing ) and how Protractor can help you to do that.
 - [Practical Protractor Tutorial](http://www.ng-newsletter.com/posts/practical-protractor.html) - Zero to somewhat-ProtractorHero in one page, I am using example from this resource to write this tutorial.
 - [Protractor for AngularJS](http://ramonvictor.github.io/protractor/slides) - Great slide presentation by Ramon Victor about protractor, longer than the previous tutorial but totally worth reading.
 - [Egghead Tutorial](https://egghead.io/series/learn-protractor-testing-for-angularjs) - Fast and easy tutorial about protractor, only 9:16 long.
