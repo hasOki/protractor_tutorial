@@ -54,7 +54,8 @@ In your terminal, you will need to run 3 things:
 ( in this tutorial I run it using `grunt serve` )
 - 'protractor'
 
-I am using [tmux](http://tmux.sourceforge.net/) to manage my terminal instances like this:
+I am using [tmux](http://tmux.sourceforge.net/) to manage my terminal instances 
+like this:
 
 ![terminal window](images/terminal_screenshot.png)
 
@@ -62,8 +63,131 @@ I am using [tmux](http://tmux.sourceforge.net/) to manage my terminal instances 
 ##Writing Your First Test
 ###Basic Testing
 
-// insert sample test code here
+####Testing For Correct Page Using Existing Element
+Let's test if the website show the correct home page. We want to test if the
+server is serving the right page, one way to test it is by checking for the home
+element ID in the page ( you can also check for page title ).
+Start with the standard jasmine test case
 
+```
+describe('E2E: main page', function(){
+});
+```
+
+We are going to start by telling web driver to open the target website ( in this
+tutorial is `http://127.0.0.1:9000` ). `browser.get()` will do that for you. Read
+more about [`browser.get` here][ref_browser_get]
+
+    browser.get('http://127.0.0.1:9000');
+
+We wrap the line within `beforeEach` to prepare the page before we test it.
+
+```
+describe('E2E: main page', function(){
+    beforeEach( function(){
+        browser.get('http://127.0.0.1:9000');
+    });
+});
+```
+
+I added the `#home` element in my home page view for the purpose of this tutorial,
+we are going to check if this element exist on the page.
+To select the element, protractor has `element()`
+and `by()` function to help us.
+Now we can test for the element `#home` exist on the page by using
+`browser.isElementPresent()`. 
+You can read more about [`browser.isElementPresent()` here][ref_isElementPresent].
+
+```
+it('should load the home page', function(){
+    var ele = by.id('home');
+    expect(browser.isElementPresent(ele).toBe(true));
+});
+```
+
+Run your protractor to test the script and see the Success message( or failure ).
+
+Continue on, we can test other element, such as the input element. 
+Here is the steps for the test:
+
+- We want to have and input button and a button -  use `by.input` and `sendKeys`
+- When user type to the input button and click the button - use
+  `by.partialButtonText` and `sendKeys('\n')`
+- It will remove the input box and replace it with a list of item - check using
+  `browser.isElementPresent()`
+
+In this example, we are selecting the button using `by.partialButtonText()`, you
+can read more about [`by.partialButtonText` here][ref_partialButtonText].  
+We can use `sendKeys` to enter text to the selected element. 
+Use `\n` to simulate the **enter key**. You can read more about 
+[`sendKeys` here][ref_sendKeys].
+
+```
+it('the input box should go away on submit', function(){
+    element(by.input('item.name')).sendKeys('Testing Input');
+    element(by.partialButtonText('THE THING')).sendKeys('\n');
+    expect(browser.isElementPresent(by.input('item.name'))).toBe(false);
+});
+```
+
+You can now run the protractor again to see your passing / failing test.
+
+If you've been following all the steps, here is the final code from this section 
+of tutorial:
+```javascript
+describe( 'E2E: main page', function(){
+    beforeEach( function(){
+        browser.get('http://127.0.0.1:9000');
+    });
+
+    it('it should load the home page', function(){
+        var ele = by.id('home');
+        expect(browser.isElementPresent(ele)).toBe(true);
+    });
+
+    it('the input box should go away on submit', function(){
+        element(by.input('item.name')).sendKeys('Testing Input');
+        element(by.partialButtonText('THE THING')).sendKeys('\n');
+        expect(browser.isElementPresent(by.input('item.name'))).toBe(false);
+    });
+});
+```
+
+####Testing For List Element Using AngularJS Binding
+```
+describe( 'listing page', function(){
+    beforeEach( function(){
+        browser.get('http://127.0.0.1:9000');
+        element(by.input('item.name')).sendKeys('Testing Input');
+        element(by.partialButtonText('THE THING')).sendKeys('\n');
+    });
+
+    it('should have 4 items', function(){
+        var elems = element.all(by.repeater('item in mockItems'));
+        expect(elems.count()).toBe(4);
+    });
+});
+```
+
+####Testing For Page Navigation Using URL and Element
+```
+describe( 'page navigation', function(){
+    var link;
+    beforeEach(function(){
+        browser.get('http://127.0.0.1:9000');
+        link = element(by.css('.header ul li:nth-child(2)'));
+        link.click();
+    });
+
+    it('should navigate to the /about page when clicking', function(){
+        expect(browser.getCurrentUrl()).toMatch(/\/about/);
+    });
+
+    it('should add the active class when at /about', function(){
+        expect(link.getAttribute('class')).toMatch(/active/);
+    });
+});
+```
 
 ###Steping Up A Notch
 As you can see from the code above, you can pile a bunch of page testing in one 
@@ -297,3 +421,10 @@ and **BOOM** ... _Awesome-Sauce_ ...
 - [Egghead Tutorial](https://egghead.io/series/learn-protractor-testing-for-angularjs) - Fast and easy tutorial about protractor, only 9:16 long.
 - [Protractor API](https://github.com/angular/protractor/blob/master/docs/api.md) - List of protractor available functions.
 - [bonus video](http://www.sophia.org/tutorials/measuring-angles-with-a-protractor--4) - This is not that kind of _protractor_ tutorial.
+
+
+[ref_browser_get]: https://github.com/angular/protractor/blob/master/docs/api.md#api-protractor-prototype-get
+[ref_isElementPresent]: https://github.com/angular/protractor/blob/master/docs/api.md#api-protractor-prototype-iselementpresent
+[ref_partialButtonText]: https://github.com/angular/protractor/blob/master/docs/api.md#api-protractorby-prototype-partialbuttontext
+[ref_sendKeys]: https://github.com/angular/protractor/blob/master/docs/api.md#api-webdriver-webelement-prototype-sendkeys
+
