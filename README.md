@@ -46,6 +46,12 @@ Here is the sample config
 For more available configuration options you can access this file 
 `./node_modules/protractor/referenceConf.js`
 
+// TODO: Add information about baseURL in the confifg
+// TODO: Add information that you can pass the baseURL in the CLI --baseUrl, this
+is good for testing on remote server / jenkins.
+
+// TODO: Show Suite configuration
+
 ##Running Your First Test
 In your terminal, you will need to run 3 things: 
 - `webdriver-manager`
@@ -61,8 +67,36 @@ like this:
 
 
 ##Writing Your First Test
-###Basic Testing
 
+####protractor_conf.js
+Here is the protractor config file for this tutorial.
+```
+// An example configuration file.
+exports.config = {
+    // Use this for chrome 
+    //chromeOnly: true,
+    //chromeDriver: './node_modules/protractor/selenium/chromedriver',
+
+    // Use this for standalone selenium server
+    seleniumAddress: 'http://0.0.0.0:4444/wd/hub',
+    
+    // Capabilities to be passed to the webdriver instance.
+    capabilities: {
+        'browserName': 'chrome'
+    },
+
+    // Spec patterns are relative to the current working directly when
+    // protractor is called.
+    specs: ['test/e2e/**/*_spec.js'],
+    // Options to be passed to Jasmine-node.
+    jasmineNodeOpts: {
+        showColors: true,
+        defaultTimeoutInterval: 30000
+    }
+};
+```
+
+###Basic Testing
 ####Testing For Correct Page Using Existing Element
 Let's test if the website show the correct home page. We want to test if the
 server is serving the right page, one way to test it is by checking for the home
@@ -154,6 +188,10 @@ describe( 'E2E: main page', function(){
 ```
 
 ####Testing For List Element Using AngularJS Binding
+Protractor was created to help us do E2E testing on AngularJS application, it's
+equiped with additional selector to select element based on AngularJS specific
+binding / model. In this section we are going to write a test that utilized that
+capability. There will be more about Angular specific selector.
 ```
 describe( 'listing page', function(){
     beforeEach( function(){
@@ -251,6 +289,11 @@ describe("hello-protractor", function () {
 });
 ```
 
+###Using Mock in Protractor
+//TODO: Write about using $httpBackend Proxy to pass the mock data to protractor
+test
+https://github.com/kbaltrinic/http-backend-proxy
+
 ##Protractor Cheat Sheet
 
 ###Global Variables
@@ -292,6 +335,14 @@ capabilities: {
 },
 ```
 
+###Testing Non-AngularJS Website Using Protractor
+Even if the website is not an AngularJS website, you can still test the web page
+using WebDriver instance in the browser object.
+
+```
+var driver = browser.driver;
+// driver.findElement( ... );
+```
 
 ###Taking Web Page Snapshots
 If you want to take a _selfie_ of your website you can do it using 
@@ -415,7 +466,7 @@ and **BOOM** ... _Awesome-Sauce_ ...
   
 ##Additional Reading
 
-- [Introduction to Protractor] (https://docs.google.com/a/hasoffers.com/file/d/0BwDWzYJ-4RpAQnNRLXM3QVFPMjg/edit) - Highlevel overview of Functional Test ( E2E Testing ) and how Protractor can help you to do that.
+- [Introduction to Protractor](https://docs.google.com/a/hasoffers.com/file/d/0BwDWzYJ-4RpAQnNRLXM3QVFPMjg/edit) - Highlevel overview of Functional Test ( E2E Testing ) and how Protractor can help you to do that.
 - [Practical Protractor Tutorial](http://www.ng-newsletter.com/posts/practical-protractor.html) - Zero to somewhat-ProtractorHero in one page, I am using example from this resource to write this tutorial.
 - [Protractor for AngularJS](http://ramonvictor.github.io/protractor/slides) - Great slide presentation by Ramon Victor about protractor, longer than the previous tutorial but totally worth reading.
 - [Egghead Tutorial](https://egghead.io/series/learn-protractor-testing-for-angularjs) - Fast and easy tutorial about protractor, only 9:16 long.
