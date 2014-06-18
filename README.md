@@ -289,6 +289,14 @@ describe("hello-protractor", function () {
 });
 ```
 
+###Testing Protractor Interactively
+Use `elementexplorer.js` in the protractor bin folder and run this:
+
+    node ./node_module/protractor/bin/elementexplorer.js <urL>
+
+to test the site using protractor interactively, this one comes handy when you
+setup the test suite for the first time and studying the dom selector
+
 ###Using Mock in Protractor
 //TODO: Write about using $httpBackend Proxy to pass the mock data to protractor
 test
@@ -306,9 +314,24 @@ https://github.com/kbaltrinic/http-backend-proxy
 ###Selector
 
 ####Generic Selector
-
+- Select by css
+- Select by id
 
 ####AngularJS Selector
+- Select by Model
+- Select by Binding
+- Select by Repeater
+- Select by Button Text
+- Select by Partial Button Text
+- Select by Partial CSS
+
+####Function Prototype
+- .isElementPresent
+- .findElement
+- .all
+- browser.get
+- browser.debugger
+- browser.sleep
 
 
 ##More Settings
@@ -461,9 +484,92 @@ e2eTest: {
       }
 ```
 
-and **BOOM** ... _Awesome-Sauce_ ...
+and **BOOM**
 
-  
+##Testing Using Sauce Labs
+
+###What is Sauce Labs
+Sauce labs is and online service where you can rent test server ( by the minutes ) 
+to do your testing. You can do JS unit testing and E2E unit testing by sending the
+request to their Sauce Lab server. Sauce Lab also provides you with the recording 
+and the snap shot of your E2E testing.
+
+###Protractor + Sauce Labs === Awesome Sauce
+Thanks to protractor, testing using Sauce Lab is just as easy as adding the Sauce
+Lab credential in you protractor config file `protractor_conf.js`. You can get
+your unique key from your Sauce Lab Account Home. Don't forget to comment out the
+selenium address to start using Sauce Labs selenium server.
+
+![sauce labs key](images/sauce_lab_access_key.png)
+
+```
+// Don't forget to comment out this property
+// seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
+
+sauceUser        : '<your_sauce_lab_user_name>',
+sauceKey         : '<your_sauce_lab_generated_key',
+```
+
+After you change the config file you can call protractor again from command line (
+you can also use grunt ). You can watch the on going test by loging in to
+SauceLabs and click on the running sessions, you can watch it as a a streaming
+video. After a session is done, you can play the replay of the session or visit
+the screen shot of the testing process.
+
+With Sauce Labs you can name your session and specify browser / os type by adding 
+`"name"`, `"os"` and `"browserName"` parameter in the testing capabilities object. 
+For more accepted keys information you can read it 
+[here](https://docs.saucelabs.com/reference/test-configuration/#accepted-keys).
+
+```
+...
+multiCapabilities: [
+    {
+        "name"       : "SuperAwesome Safari Testing",
+        "os"         : "os X 10.9",
+        "version"    : "7",
+        "browserName": "safari",
+        "avoid-proxy": false
+    },
+    {
+        "name"       : "Fury Fiery Firefox Testing",
+        "browserName": "firefox"
+    },
+    {
+        "name"       : "Cromagnon Chrome Testing",
+        "browserName": "chrome"
+    }
+],
+...
+```
+
+###I was Stuck on ...
+
+####Safari can't open selfsign SSL
+When I tried to run my protractor on Sauce Lab using Safari, the test is failing
+because it always show error on the failing SSL and timing out since it never going 
+through the testing steps.
+
+![Safari SSL Error](images/safari_ssl_error.png)
+
+Solve this problem by adding `"avoid-proxy"` parameter in the browser capability
+object.
+
+```
+{
+    "name"       : "SuperAwesome Safari Testing",
+    "os"         : "os X 10.9",
+    "version"    : "7",
+    "browserName": "safari",
+    "avoid-proxy": false
+},
+```
+
+
+
+
+
+
 ##Additional Reading
 
 - [Introduction to Protractor](https://docs.google.com/a/hasoffers.com/file/d/0BwDWzYJ-4RpAQnNRLXM3QVFPMjg/edit) - Highlevel overview of Functional Test ( E2E Testing ) and how Protractor can help you to do that.
