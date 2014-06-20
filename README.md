@@ -297,6 +297,14 @@ Use `elementexplorer.js` in the protractor bin folder and run this:
 to test the site using protractor interactively, this one comes handy when you
 setup the test suite for the first time and studying the dom selector
 
+###Steping Through Protractor Test
+To step through your protractor testing you can use the debug mode in protractor
+
+    protractor debug <your-e2e-config-file.js>
+
+Protractor has its own debugger command to pause the testing process. Use
+`browser.debugger()` to pause during the protractor test.
+
 ###Using Mock in Protractor
 //TODO: Write about using $httpBackend Proxy to pass the mock data to protractor
 test
@@ -314,24 +322,28 @@ https://github.com/kbaltrinic/http-backend-proxy
 ###Selector
 
 ####Generic Selector
-- Select by css
-- Select by id
+- [Select by css]()
+- [Select by tag name]()
+- [Select by id]()
 
 ####AngularJS Selector
-- Select by Model
-- Select by Binding
-- Select by Repeater
-- Select by Button Text
-- Select by Partial Button Text
-- Select by Partial CSS
+- [Select by Model]()
+- [Select by Binding]()
+- [Select by Repeater]()
+- [Select by Button Text]()
+- [Select by Partial Button Text]()
+- [Select by Partial CSS]()
 
 ####Function Prototype
-- .isElementPresent
-- .findElement
-- .all
-- browser.get
-- browser.debugger
-- browser.sleep
+- [element]()
+- [sendKeys()]()
+- [browser.actions().mouseMove(...).perform()]()
+- [isDisplayed]()
+- [browser.isElementPresent]()
+- [browser.get]()
+- [browser.getCurrentUrl]()
+- [browser.debugger]()
+- [browser.sleep]()
 
 
 ##More Settings
