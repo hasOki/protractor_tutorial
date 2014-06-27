@@ -5,7 +5,6 @@ Protractor is a E2E testing using Selenium. It will test using black box and
 design to simulate end user web page access perspective. Functionality of the page 
 element and work flow of the application is the crucial part of the testing.
 
-
 ##Why Protractor
 Protractor is a match made in heaven for AngularJS. Besides having the selenium 
 DOM targeting capability, it also has capability to select element based on the 
@@ -41,24 +40,102 @@ you can copy it as your base configuration.
 
 	$ cp ./node_modules/protractor/example/chromeOnlyConf.js protractor_conf.js
 	
-Here is the sample config 
-	
+Here is the sample protractor config
+```
+exports.config = {
+  // SauceLab Login, uncomment this area if you want to use Sauce Labs
+  //sauceUser        : '<your_sauce_lab_user_name>',
+  //sauceKey         : '<your_sauce_lab_generated_key>',
+
+  // Use this for chrome
+  //chromeOnly: true,
+  //chromeDriver: './node_modules/protractor/selenium/chromedriver',
+
+  // Use this for standalone selenium server
+  seleniumAddress: 'http://0.0.0.0:4444/wd/hub',
+
+  // Capabilities to be passed to the webdriver instance.
+  capabilities   : {
+    'browserName': 'chrome'
+  },
+
+  // Spec patterns are relative to the current working directly when
+  // protractor is called.
+  specs          : ['test/e2e/**/*_spec.js'],
+
+  // Options to be passed to Jasmine-node.
+  jasmineNodeOpts: {
+    showColors            : true,
+    isVerbose             : true,
+    defaultTimeoutInterval: 30000
+  }
+};
+
+```
 For more available configuration options you can access this file 
 `./node_modules/protractor/referenceConf.js`
 
-// TODO: Add information about baseURL in the confifg
-// TODO: Add information that you can pass the baseURL in the CLI --baseUrl, this
-is good for testing on remote server / jenkins.
+You can define the `baseUrl` attribute inside your config file and call it from
+your test code by using `browser.baseUrl`.
 
-// TODO: Show Suite configuration
+_In your `protractor_conf.js`_
+```
+// in your protractor_conf.js
+exports.config = {
+...
+  baseUrl: 'http://localhost:9000',
+...
+}
+```
+_and In your test code_
+```
+...
+browser.get(browser.baseUrl);
+...
+```
+
+This will come handy if you want to use the same `protractor_conf.js` to test
+different environment. You can pass the override baseUrl in the command line.
+```
+./node_modules/protractor/bin/protractor protractor_conf --baseUrl <new env. url>
+```
+
+At the moment you start collecting a pile of spec in one folder, that the time you
+need to start thinking of separating your test specs into **suite**. By using
+*suite* you can easily test partial part of your whole test suites and focus just
+on certain part of the test one a time. 
+Here is how to define suites in your config file.
+```
+...
+  suites: [
+    login    : 'test/e2e/login/**/*_spec.js',
+    dashboard: 'test/e2e/dashboard/**/*_spec.js',
+    myAccount: 'test/e2e/myAccount/**/*_spec.js',
+    offers   : 'test/e2e/offers/**/*_spec.js',
+    reports  : 'test/e2e/reports/**/*_spec.js',
+    search   : 'test/e2e/search/**/*_spec.js',
+    tools    : 'test/e2e/tools/**/*_spec.js'
+  ]
+...
+```
+After you setup your suites, you can test on individual suites using the command
+line:
+```
+./node_modules/protractor/bin/protractor protractor_conf --suite <suite_name>
+```
+It will just run `login` suite and ignoring other suite. The caveat of using suite
+is that you need to make sure that each suite is idempotent and not dependent on
+the previous suite to run before the current suite can be tested correctly.
+
 
 ##Running Your First Test
 In your terminal, you will need to run 3 things: 
+
 - `webdriver-manager`
   Protractor comes with
-- your web server that you want to test 
-( in this tutorial I run it using `grunt serve` )
-- 'protractor'
+- your web server that you want to test ( in this tutorial I run it using 
+`grunt serve` )
+- `protractor`
 
 I am using [tmux](http://tmux.sourceforge.net/) to manage my terminal instances 
 like this:
@@ -189,9 +266,20 @@ describe( 'E2E: main page', function(){
 
 ####Testing For List Element Using AngularJS Binding
 Protractor was created to help us do E2E testing on AngularJS application, it's
-equiped with additional selector to select element based on AngularJS specific
+equipped with additional selector to select element based on AngularJS specific
 binding / model. In this section we are going to write a test that utilized that
-capability. There will be more about Angular specific selector.
+capability.
+
+In this example we are going to select the element that was created using
+`ng-repeat`. Protractor has a `by.repeater` selector that we can use.  
+When selecting multiple element, you need to use `element.all` to get an array of
+elements.
+```
+var elems = element.all(by.repeater('item in mockItems'));
+```
+Once you get the elements array you can do `count()` to check for array length.
+
+Here is the code for this section.
 ```
 describe( 'listing page', function(){
     beforeEach( function(){
@@ -207,7 +295,28 @@ describe( 'listing page', function(){
 });
 ```
 
-####Testing For Page Navigation Using URL and Element
+####Testing For Page Navigation Using URL and Element Attribute
+Another way to check for a correct page being loaded into the browser is by
+checking their URL, you can achive this by using `browser.getCurrentUrl()` and
+match them using regular expression
+```
+expect(browser.getCurrentUrl()).toMatch(/\about/);
+```
+Checking for a class or atribute of an element also anoter way to check if a
+button clicked / hover or changed. You can interact with Element by clicking on it
+using `.click()` command.
+
+```
+...
+var link = element(by.css('.header ul li:nth-child(2)'));
+link.click();
+...
+expect(link.getAttribute('class')).toMatch(/active/);
+...
+```
+
+This is the last describe section to test the url and element attributes.
+
 ```
 describe( 'page navigation', function(){
     var link;
@@ -231,7 +340,7 @@ describe( 'page navigation', function(){
 As you can see from the code above, you can pile a bunch of page testing in one 
 testing config file. 
 It will grow nasty pretty quick and become unreadable. Another way to manage the 
-the test case is by separating the selector and test into separate class.
+the test case is by separating the selector and test into separate page class.
 
 ```
 function IndexPage() {
@@ -258,7 +367,7 @@ function IndexPage() {
 module.exports = IndexPage;
 ```
 
-And in the main spec file you import the class in
+And in the main spec file you import the class in.
 
 ```
 var IndexPage = require('./IndexPage');
@@ -288,42 +397,49 @@ describe("hello-protractor", function () {
   });
 });
 ```
+Using this method your testing code is more readable and you can extends similar
+page class to keep the same behaviour checks and not copy pasting a bunch of
+repeated code in multiple page files.
 
 ###Testing Protractor Interactively
-Use `elementexplorer.js` in the protractor bin folder and run this:
+Protractor comes with this script, `elementexplorer.js` in the protractor bin 
+folder, this code will run protractor testing in interactive mode:
 
-    node ./node_module/protractor/bin/elementexplorer.js <urL>
+```
+node ./node_module/protractor/bin/elementexplorer.js <urL>
+```
 
-to test the site using protractor interactively, this one comes handy when you
-setup the test suite for the first time and studying the dom selector
+This one comes handy when you setup the test suite for the first time and studying 
+the DOM selector.
 
-###Steping Through Protractor Test
+###Stepping Through Protractor Test
 To step through your protractor testing you can use the debug mode in protractor
 
-    protractor debug <your-e2e-config-file.js>
+```
+protractor debug <your-e2e-config-file.js>
+```
 
 Protractor has its own debugger command to pause the testing process. Use
 `browser.debugger()` to pause during the protractor test.
 
 ###Using Mock in Protractor
 //TODO: Write about using $httpBackend Proxy to pass the mock data to protractor
-test
-https://github.com/kbaltrinic/http-backend-proxy
+test https://github.com/kbaltrinic/http-backend-proxy
 
 ##Protractor Cheat Sheet
+Here is some most common api that you can use to test your website E2E:
 
 ###Global Variables
-- [browser](): push location to the test browser
-- [element](): select the DOM element
-- [by](): selector helper ( you can select by model, id, class etc. )
-- [protractor]():   
-
+- [browser](https://github.com/angular/protractor/blob/master/docs/api.md#webdriverwebdriver) 
+- [element](https://github.com/angular/protractor/blob/master/docs/api.md#elementfinder)
+- [by](https://github.com/angular/protractor/blob/master/docs/api.md#protractorby)
+- [protractor](https://github.com/angular/protractor/blob/master/docs/api.md#api-protractor)
 
 ###Selector
-
 ####Generic Selector
-- [Select by css]()
-- [Select by tag name]()
+- [element](https://github.com/angular/protractor/blob/master/docs/api.md#elementfinderprototypeelement)
+- [Select by css](https://github.com/angular/protractor/blob/master/docs/api.md#elementfinderprototype)
+- [Select by tag name](https://github.com/angular/protractor/blob/master/docs/api.md#elementfinderprototype)
 - [Select by id]()
 
 ####AngularJS Selector
@@ -335,9 +451,9 @@ https://github.com/kbaltrinic/http-backend-proxy
 - [Select by Partial CSS]()
 
 ####Function Prototype
-- [element]()
 - [sendKeys()]()
 - [browser.actions().mouseMove(...).perform()]()
+- [click()]()
 - [isDisplayed]()
 - [browser.isElementPresent]()
 - [browser.get]()
@@ -486,6 +602,7 @@ Install the watch plug in, if you have not already, using
 and add the e2e settings inside the `watch`section:
 
 ```
+...
 e2eTest: {
 	files: ['e2e/{,*/}*.js',
             '<%= yeoman.app %>/scripts/{,*/}*.js',
@@ -494,6 +611,7 @@ e2eTest: {
                 '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'],
         tasks: ['protractor-e2e']
       }
+...
 ```
 
 and **BOOM**
@@ -519,7 +637,7 @@ selenium address to start using Sauce Labs selenium server.
 // seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
 
 sauceUser        : '<your_sauce_lab_user_name>',
-sauceKey         : '<your_sauce_lab_generated_key',
+sauceKey         : '<your_sauce_lab_generated_key>',
 ```
 
 After you change the config file you can call protractor again from command line (
@@ -556,6 +674,9 @@ multiCapabilities: [
 ```
 
 ###I was Stuck on ...
+####My Protractor still connecting to my local web driver server not Sauce Labs
+Check your config file and make sure that you not decalring any webdriver address
+and only have sauce lab login credential in your config file.
 
 ####Safari can't open selfsign SSL
 When I tried to run my protractor on Sauce Lab using Safari, the test is failing
@@ -565,9 +686,10 @@ through the testing steps.
 ![Safari SSL Error](images/safari_ssl_error.png)
 
 Solve this problem by adding `"avoid-proxy"` parameter in the browser capability
-object.
+object and only use Safari V7 and above.
 
 ```
+...
 {
     "name"       : "SuperAwesome Safari Testing",
     "os"         : "os X 10.9",
@@ -575,7 +697,13 @@ object.
     "browserName": "safari",
     "avoid-proxy": false
 },
+...
 ```
+
+###Tesing Using ES6
+I will continue this tutorial on the next tag, by using ES6 for protractor testing
+and using real Classes for the Page Object.
+// TODO: Create Tag ES6 and start developing using ES6 in that tag.
 
 
 

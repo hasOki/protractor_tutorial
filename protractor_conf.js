@@ -1,8 +1,8 @@
 // An example configuration file.
 exports.config = {
-  // SauceLab Login, using hasOki sauceKey, need to create hasOffer generic account
-  sauceUser        : 'hasOki',
-  sauceKey         : '662e909a-e63a-4265-ab11-82f2b713de51',
+  // SauceLab Login, uncomment this area if you want to use Sauce Labs
+  //sauceUser        : '<your_sauce_lab_user_name>',
+  //sauceKey         : '<your_sauce_lab_generated_key>',
 
   // Use this for chrome
   //chromeOnly: true,
