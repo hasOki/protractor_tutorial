@@ -12,13 +12,13 @@ Angular binding attributes ( e.g. ng-model, )
 
 ##Installation
 You can install the protractor as global stand alone app using 
-	
-	$ npm -g install protractor
-	
+```bat
+$ npm -g install protractor
+```	
 or locally
-	
-	$ npm install protractor 
-
+```bat
+$ npm install protractor 
+```
 Protractor also require a webdriver to run it's testing, luckyly Protractor comes 
 with the webdriver-manager to download the necessary browser driver file. 
 Depending on your protractor installation you can either access your 
