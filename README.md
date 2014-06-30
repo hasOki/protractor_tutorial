@@ -12,11 +12,11 @@ Angular binding attributes ( e.g. ng-model, )
 
 ##Installation
 You can install the protractor as global stand alone app using 
-```bat
+```shell
 $ npm -g install protractor
 ```	
 or locally
-```bat
+```shell
 $ npm install protractor 
 ```
 Protractor also require a webdriver to run it's testing, luckyly Protractor comes 
@@ -96,7 +96,7 @@ browser.get(browser.baseUrl);
 
 This will come handy if you want to use the same `protractor_conf.js` to test
 different environment. You can pass the override baseUrl in the command line.
-```bat
+```shell
 ./node_modules/protractor/bin/protractor protractor_conf --baseUrl <new env. url>
 ```
 
@@ -120,7 +120,7 @@ Here is how to define suites in your config file.
 ```
 After you setup your suites, you can test on individual suites using the command
 line:
-```bat
+```shell
 ./node_modules/protractor/bin/protractor protractor_conf --suite <suite_name>
 ```
 It will just run `login` suite and ignoring other suite. The caveat of using suite
@@ -405,7 +405,7 @@ repeated code in multiple page files.
 Protractor comes with this script, `elementexplorer.js` in the protractor bin 
 folder, this code will run protractor testing in interactive mode:
 
-```bat
+```shell
 node ./node_module/protractor/bin/elementexplorer.js <urL>
 ```
 
@@ -415,7 +415,7 @@ the DOM selector.
 ###Stepping Through Protractor Test
 To step through your protractor testing you can use the debug mode in protractor
 
-```bat
+```shell
 protractor debug <your-e2e-config-file.js>
 ```
 
