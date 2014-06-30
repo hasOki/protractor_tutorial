@@ -41,7 +41,7 @@ you can copy it as your base configuration.
 	$ cp ./node_modules/protractor/example/chromeOnlyConf.js protractor_conf.js
 	
 Here is the sample protractor config
-```
+```javascript
 exports.config = {
   // SauceLab Login, uncomment this area if you want to use Sauce Labs
   //sauceUser        : '<your_sauce_lab_user_name>',
@@ -70,8 +70,8 @@ exports.config = {
     defaultTimeoutInterval: 30000
   }
 };
-
 ```
+
 For more available configuration options you can access this file 
 `./node_modules/protractor/referenceConf.js`
 
@@ -79,7 +79,7 @@ You can define the `baseUrl` attribute inside your config file and call it from
 your test code by using `browser.baseUrl`.
 
 _In your `protractor_conf.js`_
-```
+```javascript
 // in your protractor_conf.js
 exports.config = {
 ...
@@ -88,7 +88,7 @@ exports.config = {
 }
 ```
 _and In your test code_
-```
+```javascript
 ...
 browser.get(browser.baseUrl);
 ...
@@ -96,7 +96,7 @@ browser.get(browser.baseUrl);
 
 This will come handy if you want to use the same `protractor_conf.js` to test
 different environment. You can pass the override baseUrl in the command line.
-```
+```bat
 ./node_modules/protractor/bin/protractor protractor_conf --baseUrl <new env. url>
 ```
 
@@ -105,7 +105,7 @@ need to start thinking of separating your test specs into **suite**. By using
 *suite* you can easily test partial part of your whole test suites and focus just
 on certain part of the test one a time. 
 Here is how to define suites in your config file.
-```
+```javascript
 ...
   suites: [
     login    : 'test/e2e/login/**/*_spec.js',
@@ -120,7 +120,7 @@ Here is how to define suites in your config file.
 ```
 After you setup your suites, you can test on individual suites using the command
 line:
-```
+```bat
 ./node_modules/protractor/bin/protractor protractor_conf --suite <suite_name>
 ```
 It will just run `login` suite and ignoring other suite. The caveat of using suite
@@ -147,7 +147,7 @@ like this:
 
 ####protractor_conf.js
 Here is the protractor config file for this tutorial.
-```
+```javascript
 // An example configuration file.
 exports.config = {
     // Use this for chrome 
@@ -180,7 +180,7 @@ server is serving the right page, one way to test it is by checking for the home
 element ID in the page ( you can also check for page title ).
 Start with the standard jasmine test case
 
-```
+```javascript
 describe('E2E: main page', function(){
 });
 ```
@@ -193,7 +193,7 @@ more about [`browser.get` here][ref_browser_get]
 
 We wrap the line within `beforeEach` to prepare the page before we test it.
 
-```
+```javascript
 describe('E2E: main page', function(){
     beforeEach( function(){
         browser.get('http://127.0.0.1:9000');
@@ -209,7 +209,7 @@ Now we can test for the element `#home` exist on the page by using
 `browser.isElementPresent()`. 
 You can read more about [`browser.isElementPresent()` here][ref_isElementPresent].
 
-```
+```javascript
 it('should load the home page', function(){
     var ele = by.id('home');
     expect(browser.isElementPresent(ele).toBe(true));
@@ -233,7 +233,7 @@ We can use `sendKeys` to enter text to the selected element.
 Use `\n` to simulate the **enter key**. You can read more about 
 [`sendKeys` here][ref_sendKeys].
 
-```
+```javascript
 it('the input box should go away on submit', function(){
     element(by.input('item.name')).sendKeys('Testing Input');
     element(by.partialButtonText('THE THING')).sendKeys('\n');
@@ -274,13 +274,13 @@ In this example we are going to select the element that was created using
 `ng-repeat`. Protractor has a `by.repeater` selector that we can use.  
 When selecting multiple element, you need to use `element.all` to get an array of
 elements.
-```
+```javascript
 var elems = element.all(by.repeater('item in mockItems'));
 ```
 Once you get the elements array you can do `count()` to check for array length.
 
 Here is the code for this section.
-```
+```javascript
 describe( 'listing page', function(){
     beforeEach( function(){
         browser.get('http://127.0.0.1:9000');
@@ -299,14 +299,14 @@ describe( 'listing page', function(){
 Another way to check for a correct page being loaded into the browser is by
 checking their URL, you can achive this by using `browser.getCurrentUrl()` and
 match them using regular expression
-```
+```javascript
 expect(browser.getCurrentUrl()).toMatch(/\about/);
 ```
 Checking for a class or atribute of an element also anoter way to check if a
 button clicked / hover or changed. You can interact with Element by clicking on it
 using `.click()` command.
 
-```
+```javascript
 ...
 var link = element(by.css('.header ul li:nth-child(2)'));
 link.click();
@@ -317,7 +317,7 @@ expect(link.getAttribute('class')).toMatch(/active/);
 
 This is the last describe section to test the url and element attributes.
 
-```
+```javascript
 describe( 'page navigation', function(){
     var link;
     beforeEach(function(){
@@ -342,7 +342,7 @@ testing config file.
 It will grow nasty pretty quick and become unreadable. Another way to manage the 
 the test case is by separating the selector and test into separate page class.
 
-```
+```javascript
 function IndexPage() {
   this.button = element(by.id('button1'));
   this.message = element(by.binding('messageText'));
@@ -369,7 +369,7 @@ module.exports = IndexPage;
 
 And in the main spec file you import the class in.
 
-```
+```javascript
 var IndexPage = require('./IndexPage');
 
 describe("hello-protractor", function () {
@@ -405,7 +405,7 @@ repeated code in multiple page files.
 Protractor comes with this script, `elementexplorer.js` in the protractor bin 
 folder, this code will run protractor testing in interactive mode:
 
-```
+```bat
 node ./node_module/protractor/bin/elementexplorer.js <urL>
 ```
 
@@ -415,7 +415,7 @@ the DOM selector.
 ###Stepping Through Protractor Test
 To step through your protractor testing you can use the debug mode in protractor
 
-```
+```bat
 protractor debug <your-e2e-config-file.js>
 ```
 
@@ -467,7 +467,7 @@ Here is some most common api that you can use to test your website E2E:
 If you are feeling confident with your code and want to test it against multiple 
 browser you can set it up using:
 
-```
+```javascript
 multiCapabilities: [{
  	'browserName': 'firefox'
 }, {
@@ -477,7 +477,7 @@ multiCapabilities: [{
 
 You can also pass chrome-specific option by passing it as `chromeOptions` property:
 
-```
+```javascript
 capabilities: {
   	'browserName': 'chrome',
   	'chromeOptions': {
@@ -490,7 +490,7 @@ capabilities: {
 Even if the website is not an AngularJS website, you can still test the web page
 using WebDriver instance in the browser object.
 
-```
+```javascript
 var driver = browser.driver;
 // driver.findElement( ... );
 ```
@@ -501,7 +501,7 @@ If you want to take a _selfie_ of your website you can do it using
 
 Here is the sample usage:
 
-```
+```javascript
 // at the top of the test spec:
 var fs = require('fs');
 
@@ -527,7 +527,7 @@ browser.takeScreenshot().then(function (png) {
 To make your life easier, you can get `grunt-protractor-runner` and you can add 
 the protractor section in your `Gruntfile.js` 
 
-```
+```javascript
 protractor: {
     options: {
           configFile: "protractor-config.js”, //your protractor config file
@@ -569,7 +569,7 @@ Install the concurrent plug-in in your project root directory using:
 
 Register each browser test as separate test
 
-```
+```javascript
 grunt.registerTask('protractor-chrome', ['protractor:chrome']);
 grunt.registerTask('protractor-safari', ['protractor:safari']);
 grunt.registerTask('protractor-firefox', ['protractor:firefox']);
@@ -577,7 +577,7 @@ grunt.registerTask('protractor-firefox', ['protractor:firefox']);
 
 Call the registered tasks inside the concurrent settings:
 
-```
+```javascript
 concurrent:{
 	protractor_test: ['protractor-chrome', 'protractor-safari', 'protractor-firefox']
 }
@@ -585,7 +585,7 @@ concurrent:{
 
 Add a new task in your `Gruntfile.js`
 
-```
+```javascript
 grunt.registerTask('protractor-e2e', ['concurrent:protractor_test']);
 ```
 
@@ -601,7 +601,7 @@ Install the watch plug in, if you have not already, using
 	
 and add the e2e settings inside the `watch`section:
 
-```
+```javascript
 ...
 e2eTest: {
 	files: ['e2e/{,*/}*.js',
@@ -632,7 +632,7 @@ selenium address to start using Sauce Labs selenium server.
 
 ![sauce labs key](images/sauce_lab_access_key.png)
 
-```
+```javascript
 // Don't forget to comment out this property
 // seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
 
@@ -651,7 +651,7 @@ With Sauce Labs you can name your session and specify browser / os type by addin
 For more accepted keys information you can read it 
 [here](https://docs.saucelabs.com/reference/test-configuration/#accepted-keys).
 
-```
+```javascript
 ...
 multiCapabilities: [
     {
@@ -688,7 +688,7 @@ through the testing steps.
 Solve this problem by adding `"avoid-proxy"` parameter in the browser capability
 object and only use Safari V7 and above.
 
-```
+```javascript
 ...
 {
     "name"       : "SuperAwesome Safari Testing",
@@ -704,9 +704,6 @@ object and only use Safari V7 and above.
 I will continue this tutorial on the next tag, by using ES6 for protractor testing
 and using real Classes for the Page Object.
 // TODO: Create Tag ES6 and start developing using ES6 in that tag.
-
-
-
 
 
 
