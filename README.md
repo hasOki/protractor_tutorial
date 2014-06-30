@@ -12,24 +12,32 @@ Angular binding attributes ( e.g. ng-model, ng-repeat, ng-bind, etc. )
 
 ##Installation
 You can install the protractor as global stand alone app using 
-```shell
+
+``` shell
 $ npm -g install protractor
-```	
+```
+
 or locally
+
 ```shell
 $ npm install protractor 
 ```
+
 Protractor also require a webdriver to run it's testing, luckyly Protractor comes 
 with the webdriver-manager to download the necessary browser driver file. 
 Depending on your protractor installation you can either access your 
 webdriver-manager inside your project `node_modules/` to run this command:
 
-	$ ./node_modules/protractor/bin/webdriver-manager update
+```shell
+$ ./node_modules/protractor/bin/webdriver-manager update
+```
 	
 The script will download the files that needed to run Selenium. After download you 
 can test if the webdriver properly downloaded and installed by typing:
 
-	$ ./node_modules/protractor/bin/webdriver-manager start
+```shell
+$ ./node_modules/protractor/bin/webdriver-manager start
+```
 
 Once you have it running without error you already to do your testing.
 	
@@ -701,11 +709,27 @@ object and only use Safari V7 and above.
 ```
 
 ###Tesing Using ES6
-I will continue this tutorial on the next tag, by using ES6 for protractor testing
-and using real Classes for the Page Object.
-// TODO: Create Tag ES6 and start developing using ES6 in that tag.
-
-
+Add this code in your spec files, to skip the precompile to es6 process when you 
+want to use es6 in your protractor spec code:
+```javascript
+// compile the es6 if the require code comes from e2e folder
+var traceur = require('traceur');
+traceur.require.makeDefault(function(filename){
+  return filename.indexOf('<your es6 folder>') !== -1;
+});
+var ClassName = require('./classFile')['ClassName']
+```
+and export your class in your class file using new ES6 `export` keyword
+```javascript
+export class ClassName{
+  constructor(){
+    ...
+  }
+  ...
+}
+```
+No more grunt tasks to precompile your ES6, just code and see it happening in your
+test flow.
 
 ##Additional Reading
 
