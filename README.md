@@ -710,7 +710,7 @@ object and only use Safari V7 and above.
 
 ##Tesing Using ES6
 Add this code in your spec files, to skip the precompile to es6 process when you 
-want to use es6 in your protractor spec code:
+want to use es6 in your protractor spec code. 
 ```javascript
 // compile the es6 if the require code comes from e2e folder
 var traceur = require('traceur');
@@ -730,6 +730,12 @@ export class ClassName{
 ```
 No more grunt tasks to precompile your ES6, just code and see it happening in your
 test flow.
+Make sure that you have `traceur` in your global level so you can include it in 
+your run time using `require`. If you don't have `traceur` in your global level
+you can install it using
+```javascript
+npm install -g traceur
+```
 
 ##Additional Reading
 
