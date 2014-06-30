@@ -8,7 +8,7 @@ element and work flow of the application is the crucial part of the testing.
 ##Why Protractor
 Protractor is a match made in heaven for AngularJS. Besides having the selenium 
 DOM targeting capability, it also has capability to select element based on the 
-Angular binding attributes ( e.g. ng-model, )
+Angular binding attributes ( e.g. ng-model, ng-repeat, ng-bind, etc. )
 
 ##Installation
 You can install the protractor as global stand alone app using 
