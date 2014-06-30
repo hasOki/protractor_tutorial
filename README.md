@@ -708,7 +708,7 @@ object and only use Safari V7 and above.
 ...
 ```
 
-###Tesing Using ES6
+##Tesing Using ES6
 Add this code in your spec files, to skip the precompile to es6 process when you 
 want to use es6 in your protractor spec code:
 ```javascript
