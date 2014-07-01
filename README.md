@@ -13,7 +13,7 @@ Angular binding attributes ( e.g. ng-model, ng-repeat, ng-bind, etc. )
 ##Installation
 You can install the protractor as global stand alone app using 
 
-``` shell
+```shell
 $ npm -g install protractor
 ```
 
@@ -611,18 +611,53 @@ and add the e2e settings inside the `watch`section:
 
 ```javascript
 ...
-e2eTest: {
-	files: ['e2e/{,*/}*.js',
-            '<%= yeoman.app %>/scripts/{,*/}*.js',
-            '<%= yeoman.app %>/{,*/}*.html',
-                '.tmp/styles/{,*/}*.css',
-                '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'],
-        tasks: ['protractor-e2e']
-      }
+  e2eTest: {
+    files: ['e2e/{,*/}*.js',
+      '<%= yeoman.app %>/scripts/{,*/}*.js',
+      '<%= yeoman.app %>/{,*/}*.html',
+      '.tmp/styles/{,*/}*.css',
+      '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'],
+    tasks: ['protractor-e2e']
+  }
 ...
 ```
 
 and **BOOM**
+
+##Start and Stop WebDriver-Manager Automatically from Grunt
+We can add some automation to start and stop the web driver  by using
+`grunt-protractor-webdriver`, you can install the plugin using npm:
+```shell
+npm install grunt-protractor-webdriver --save-dev
+```
+Then you can add `protractor_webdriver` task in you grunt config:
+```javascript
+...
+  protractor_webdriver: {
+    options: {
+      noColor: false, // If true, protractor will not use colors in its output.
+      path   : './node_modules/protractor/bin/'
+    },
+    start  : {keepAlive: true},
+    stop   : {keepAlive: false}
+  },
+...
+```
+Once you have the `protractor_webdriver` running, you can appends and prepends the 
+testing process with starting and stopping the webdriver in the queue.
+```javascript
+...
+  grunt.registerTask('protractor-chrome', [
+    'protractor_webdriver:start',   // start the webdriver here
+    'protractor:local:chrome',      // do your thing
+    'protractor_webdriver:stop'     // stop the webdriver here
+  ]);
+...
+```
+By doing this automation, it will prevent us from creating 'zombie' service
+because we forgot to `kill` the service after we finished using selenium.
+
+You can read more about this plugins [here](https://github.com/seckardt/grunt-protractor-webdriver).
 
 ##Testing Using Sauce Labs
 
