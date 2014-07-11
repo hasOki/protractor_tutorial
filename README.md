@@ -721,6 +721,23 @@ multiCapabilities: [
 Check your config file and make sure that you not decalring any webdriver address
 and only have sauce lab login credential in your config file.
 
+####I can't connect through my office firewall
+Go to Starbucks and run it from there, JUST KIDDING. I believe this is the typical
+problem that most company have, accessing their local internal server and test it
+using remove selenium farm. SauceLabs has the solution for that, they have
+[sauceConnect](https://docs.saucelabs.com/reference/sauce-connect/).
+
+Just download their CLI app and you can follow the instruction on how to run it,
+in my case:
+```
+bin/sc -u <saucelab_user_id> -k <saucelab_token>
+```
+More available options can be read 
+[here](https://docs.saucelabs.com/reference/sauce-connect/).  
+After your run your SauceConnect, you can run your protractor saucelab testing
+again and watch the tunnel doing it works.
+
+
 ####Safari can't open selfsign SSL
 When I tried to run my protractor on Sauce Lab using Safari, the test is failing
 because it always show error on the failing SSL and timing out since it never going 
